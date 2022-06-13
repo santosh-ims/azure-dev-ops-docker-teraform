@@ -1,15 +1,21 @@
-provider "azurerm" {
-    version = "2.5.0"
-    features {}
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.0.2"
+    }
+  }
+  required_version = ">= 1.1.0"
+  backend "azurerm" {
+        resource_group_name  = "tf_rg_blobstore"
+        storage_account_name = "tfstoragesantoshims"
+        container_name       = "tfstate"
+        key                  = "terraform.tfstate"        
+    }
 }
 
-terraform {
-    backend "azurerm" {
-        resource_group_name  = "tf_rg_blobstore"
-        storage_account_name = "tfstoragebinarythistle"
-        container_name       = "tfstate"
-        key                  = "terraform.tfstate"
-    }
+provider "azurerm" {
+  features {}
 }
 
 variable "imagebuild" {
@@ -21,7 +27,7 @@ variable "imagebuild" {
 
 resource "azurerm_resource_group" "tf_test" {
   name = "tfmainrg"
-  location = "Australia East"
+  location = "Central India"
 }
 
 resource "azurerm_container_group" "tfcg_test" {
@@ -29,13 +35,13 @@ resource "azurerm_container_group" "tfcg_test" {
   location                  = azurerm_resource_group.tf_test.location
   resource_group_name       = azurerm_resource_group.tf_test.name
 
-  ip_address_type     = "public"
-  dns_name_label      = "binarythistlewa"
+  ip_address_type     = "Public"
+  dns_name_label      = "santoshimswa"
   os_type             = "Linux"
 
   container {
       name            = "weatherapi"
-      image           = "binarythistle/weatherapi:${var.imagebuild}"
+      image           = "santoshims/weatherapi:${var.imagebuild}"
         cpu             = "1"
         memory          = "1"
 
